@@ -1,0 +1,70 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: white; /* 白背景 */
+  margin: 0;
+  padding: 2rem;
+  color: black; /* 黒文字 */
+}
+
+h1 {
+  text-align: center;
+  color: blue; /* 青色見出し */
+}
+
+.form-section {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  background: white;
+  padding: 1rem 2rem;
+  border: 2px solid blue; /* 青の枠線 */
+  border-radius: 12px;
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: black;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 2px solid blue; /* 青い線 */
+  background-color: white;
+  color: black;
+}
+
+button {
+  margin-top: 1rem;
+  background-color: green; /* 緑ボタン */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.record-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+ul.record-list {
+  list-style: none;
+  padding-left: 1.5rem;
+}
+
+.record-list li {
+  margin-bottom: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 0.5rem 1rem;
+  border: 2px solid blue; /* 青枠 */
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: black;
+}
