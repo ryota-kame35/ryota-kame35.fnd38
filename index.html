@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>筋トレ記録</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>日付付きToDoリスト</title>
+  <!-- 外部CSSファイルを読み込む -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>筋トレ記録</h1>
-  <div class="form-section">
-    <label>日付:</label>
-    <input type="date" id="datePicker" />
+  <h1>やることリスト</h1>
 
-    <label>種目名:</label>
-    <select id="exerciseSelect"></select>
-
-    <label>重さ(kg):</label>
-    <input type="number" id="weightInput" />
-
-    <label>回数:</label>
-    <input type="number" id="repsInput" />
-
-    <label>セット数:</label>
-    <input type="number" id="setsInput" />
-
-    <button onclick="saveRecord()">記録を保存</button>
+  <!-- タスク入力エリア -->
+  <div class="input-area">
+    <input type="date" id="dateInput"> <!-- 日付入力欄 -->
+    <input type="text" id="taskInput" placeholder="タスクを入力"> <!-- タスク入力欄 -->
+    <button id="addBtn">追加</button> <!-- タスク追加ボタン -->
   </div>
 
-  <div class="record-section" id="recordSection"></div>
+  <!-- タスクリストを表示する領域 -->
+  <ul id="taskList"></ul>
 
+  <!-- 外部JavaScriptファイルを読み込む -->
   <script src="script.js"></script>
 </body>
 </html>
