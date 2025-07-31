@@ -1,86 +1,74 @@
-// ローカルストレージから記録と種目リストを取得（なければ初期値を使う）
-var records = JSON.parse(localStorage.getItem('trainingRecords')) || [];
-var exercises = JSON.parse(localStorage.getItem('exerciseList')) || ["ベンチプレス", "スクワット", "デッドリフト"];
+// 「追加」ボタンがクリックされたときの処理
+document.getElementById("addBtn").addEventListener("click", addTask);
 
-// 入力フォームや表示エリアの要素を取得
-var datePicker = document.getElementById("datePicker");
-var exerciseSelect = document.getElementById("exerciseSelect");
-var weightInput = document.getElementById("weightInput");
-var repsInput = document.getElementById("repsInput");
-var setsInput = document.getElementById("setsInput");
-var recordSection = document.getElementById("recordSection");
+// ページ読み込み時にローカルストレージからタスクを読み込む
+window.addEventListener("DOMContentLoaded", loadTasks);
 
-// 種目リストをプルダウンに表示
-function renderExerciseOptions() {
-  exerciseSelect.innerHTML = ""; // 一旦クリア
+// タスクを追加する関数
+function addTask() {
+  const dateInput = document.getElementById("dateInput"); // <input>要素 日付入力欄
+  const taskInput = document.getElementById("taskInput"); // <input>要素 タスク入力欄
 
-  for (var i = 0; i < exercises.length; i++) {
-    var option = document.createElement("option");
-    option.value = exercises[i];
-    option.textContent = exercises[i];
-    exerciseSelect.appendChild(option);
-  }
+  const date = dateInput.value; // .value：<input>要素の入力値（文字列）を取り出す
+  const task = taskInput.value.trim(); // .trim：文字列前後の空白を削除
+
+  if (date === "" || task === "") return; // 未入力の場合は無視
+
+  const taskObj = { date, task }; // オブジェクトにまとめる
+  saveTask(taskObj);              // ローカルストレージに保存
+  renderTask(taskObj);           // 画面に表示
+
+  // 入力欄を空に
+  dateInput.value = "";
+  taskInput.value = "";
 }
 
-// 記録を保存する関数
-function saveRecord() {
-  var date = datePicker.value;
-  var exercise = exerciseSelect.value;
-  var weight = weightInput.value;
-  var reps = repsInput.value;
-  var sets = setsInput.value;
+// タスクを画面に表示する関数
+function renderTask(taskObj) {
+  const li = document.createElement("li"); // 
 
-  // 未入力がある場合は処理をやめる
-  if (!date || !exercise || !weight || !reps || !sets) return;
-
-  // 新しい記録を追加
-  records.push({
-    date: date,
-    exercise: exercise,
-    weight: weight,
-    reps: reps,
-    sets: sets
+  // 削除ボタン
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "削除";
+  deleteBtn.className = "delete-btn";
+  deleteBtn.addEventListener("click", function () {
+    li.remove();               // 画面から削除
+    deleteTask(taskObj);       // ローカルストレージからも削除
   });
 
-  // 保存する
-  localStorage.setItem('trainingRecords', JSON.stringify(records));
+  // タスクのテキスト表示
+  const span = document.createElement("span");
+  span.textContent = `【${taskObj.date}】 ${taskObj.task}`;
+  span.addEventListener("click", function () { // .addEventListener：指定イベント発生時に関数実行
+    this.style.textDecoration = // this：クリックされたspan要素自身。.style.textDecoration：文字の装飾設定用のスタイルプロパティ
+      this.style.textDecoration === "line-through" ? "none" : "line-through";
+  });
 
-  // 表示更新
-  renderRecords();
-
-  // 入力欄をリセット
-  weightInput.value = "";
-  repsInput.value = "";
-  setsInput.value = "";
+  li.appendChild(deleteBtn);
+  li.appendChild(span);
+  document.getElementById("taskList").appendChild(li);
 }
 
-// 記録を画面に表示する（削除ボタンなし）
-function renderRecords() {
-  recordSection.innerHTML = ""; // 一度空にする
-
-  if (records.length === 0) {
-    recordSection.textContent = "記録がありません。";
-    return;
-  }
-
-  var ul = document.createElement("ul");
-  ul.className = "record-list";
-
-  for (var i = 0; i < records.length; i++) {
-    var rec = records[i];
-
-    var li = document.createElement("li");
-    li.innerHTML = 
-      "<strong>" + rec.date + "</strong> / 種目: " + rec.exercise + 
-      " / 重さ: " + rec.weight + "kg / 回数: " + rec.reps + 
-      " / セット: " + rec.sets;
-
-    ul.appendChild(li);
-  }
-
-  recordSection.appendChild(ul);
+// ローカルストレージにタスクを保存
+function saveTask(taskObj) {
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]"); // JSON.parse()：文字列→オブジェクト型に変換
+  tasks.push(taskObj);
+  localStorage.setItem("tasks", JSON.stringify(tasks)); // tasksを文字列に変換、tasksという名前でローカルストレージに保存
 }
 
-// 初期表示処理
-renderExerciseOptions();
-renderRecords();
+// ページ読み込み時にタスクを復元
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]"); 
+  tasks.forEach(renderTask); // tasks配列の各要素（オブジェクト）に対し、renderTask関数を1つずつ実行
+}
+
+// ローカルストレージからタスクを削除
+function deleteTask(taskToDelete) {
+  let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+// 指定タスクと一致のものを除いた新配列を作成
+  tasks = tasks.filter(task =>
+    !(task.date === taskToDelete.date && task.task === taskToDelete.task)
+  );
+// 新配列を文字列に変換しローカルストレージに再保存
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
